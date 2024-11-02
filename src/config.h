@@ -8,8 +8,9 @@ std::wstring GetCrCommandLine() {
   }
   return GetIniString(L"General", L"CommandLine", L"");  // Deprecated
 }
-std::wstring GetLaunchOnStartup() {
-  return GetIniString(L"general", L"launch_on_startup", L"");
+
+auto GetLaunchOnStartup() {
+  return GetIniSection(L"launch_on_startup");
 }
 
 bool IsKillLaunchOnExit() {
@@ -17,8 +18,8 @@ bool IsKillLaunchOnExit() {
                                  kIniPath.c_str()) != 0;
 }
 
-std::wstring GetLaunchOnExit() {
-  return GetIniString(L"general", L"launch_on_exit", L"");
+auto GetLaunchOnExit() {
+  return GetIniSection(L"launch_on_exit");
 }
 
 std::wstring GetDirPath(const std::wstring& dir_type) {

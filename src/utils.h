@@ -298,6 +298,21 @@ std::wstring GetIniString(const std::wstring& section,
   return std::wstring(buffer.data());
 }
 
+auto GetIniSection(const wchar_t* name) {
+  wchar_t section_content[32767];
+  GetPrivateProfileSectionW(name, section_content, 32767, kIniPath.c_str());
+
+  std::vector<std::wstring> contents;
+
+  wchar_t* content = section_content;
+  while (content && *content) {
+    contents.push_back(content);
+    content += wcslen(content) + 1;
+  }
+
+  return contents;
+}
+
 // Canonicalize the path.
 std::wstring CanonicalizePath(const std::wstring& path) {
   TCHAR temp[MAX_PATH];
@@ -364,32 +379,37 @@ void ExecuteCommand(int id, HWND hwnd = 0) {
   ::SendMessageTimeoutW(hwnd, WM_SYSCOMMAND, id, 0, 0, 1000, 0);
 }
 
-HANDLE RunExecute(const wchar_t* command, WORD show = SW_SHOW) {
-  int nArgs = 0;
-  std::vector<std::wstring> command_line;
-  LPWSTR* szArglist = CommandLineToArgvW(command, &nArgs);
-  for (int i = 0; i < nArgs; ++i) {
-    command_line.push_back(QuoteSpaceIfNeeded(szArglist[i]));
-  }
-  LocalFree(szArglist);
+HANDLE RunExecute(std::wstring command, bool show_window) {
+  int nArg;
+  LPWSTR* pArgs = CommandLineToArgvW(command.c_str(), &nArg);
+  if (nArg > 0) {
+    std::wstring param;
+    SHELLEXECUTEINFOW info;
+    ZeroMemory(&info, sizeof(info));
+    info.cbSize = sizeof(info);
+    info.fMask = 0;
+    info.hwnd = nullptr;
+    info.lpVerb = nullptr;
 
-  SHELLEXECUTEINFO ShExecInfo = {0};
-  ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-  ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-  ShExecInfo.lpFile = command_line[0].c_str();
-  ShExecInfo.nShow = show;
+    info.lpFile = pArgs[0];
 
-  std::wstring parameter;
-  for (size_t i = 1; i < command_line.size(); ++i) {
-    parameter += command_line[i];
-    parameter += L" ";
+    if (nArg >= 2) {
+      for (int i = 1; i < nArg; ++i) {
+        if (i > 1)
+          param += L' ';
+        param += pArgs[i];
+      }
+      info.lpParameters = param.c_str();
+    } else {
+      info.lpParameters = nullptr;
+    }
+    info.lpDirectory = nullptr;
+    info.nShow = show_window ? SW_SHOW : SW_HIDE;
+
+    ShellExecuteExW(&info);
   }
-  if (command_line.size() > 1) {
-    ShExecInfo.lpParameters = parameter.c_str();
-  }
-  if (ShellExecuteEx(&ShExecInfo)) {
-    return ShExecInfo.hProcess;
-  }
+
+  LocalFree(pArgs);
   return nullptr;
 }
 
