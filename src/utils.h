@@ -33,6 +33,8 @@
 #define IDC_FULLSCREEN 34030
 #define IDC_CLOSE_FIND_OR_STOP 37003
 #define IDC_WINDOW_CLOSE_OTHER_TABS 35023
+#define IDC_SHOW_HISTORY 40010
+
 
 // String manipulation function.
 std::wstring Format(const wchar_t* format, va_list args) {

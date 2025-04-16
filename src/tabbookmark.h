@@ -163,7 +163,7 @@ int HandleRightClick(WPARAM wParam, PMOUSEHOOKSTRUCT pmouse) {
       // Attempt new SendKey function which includes a `dwExtraInfo`
       // value (MAGIC_CODE).
       // SendKey(VK_MBUTTON);
-	  ExecuteCommand(IDC_NEW_TAB, hwnd);
+	  ExecuteCommand(IDC_SHOW_HISTORY, hwnd);
     }
     return 1;
   }
