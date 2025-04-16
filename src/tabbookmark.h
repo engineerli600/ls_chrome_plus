@@ -3,6 +3,9 @@
 
 #include "iaccessible.h"
 
+// 打开设置页面
+#define IDC_OPTIONS 40015
+
 HHOOK mouse_hook = nullptr;
 
 #define KEY_PRESSED 0x8000
@@ -163,7 +166,7 @@ int HandleRightClick(WPARAM wParam, PMOUSEHOOKSTRUCT pmouse) {
       // Attempt new SendKey function which includes a `dwExtraInfo`
       // value (MAGIC_CODE).
       // SendKey(VK_MBUTTON);
-	  ExecuteCommand(IDC_SHOW_HISTORY, hwnd);
+	  ExecuteCommand(IDC_OPTIONS, hwnd);
     }
     return 1;
   }
