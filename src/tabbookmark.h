@@ -3,6 +3,8 @@
 
 #include "iaccessible.h"
 
+// 打开历史记录页面
+#define IDC_SHOW_HISTORY 40010
 // 打开设置页面
 #define IDC_OPTIONS 40015
 
@@ -157,17 +159,11 @@ int HandleRightClick(WPARAM wParam, PMOUSEHOOKSTRUCT pmouse) {
 
   bool is_on_one_tab = IsOnOneTab(top_container_view, pt);
   bool keep_tab = IsNeedKeep(top_container_view);
+  bool is_on_new_tab_button = IsOnNewTabButton(top_container_view, pt);
 
-  if (is_on_one_tab) {
-    if (keep_tab) {
-      ExecuteCommand(IDC_NEW_TAB, hwnd);
-      ExecuteCommand(IDC_WINDOW_CLOSE_OTHER_TABS, hwnd);
-    } else {
-      // Attempt new SendKey function which includes a `dwExtraInfo`
-      // value (MAGIC_CODE).
-      // SendKey(VK_MBUTTON);
-	  ExecuteCommand(IDC_OPTIONS, hwnd);
-    }
+
+  if (is_on_new_tab_button) {
+    ExecuteCommand(IDC_OPTIONS, hwnd);
     return 1;
   }
   return 0;
