@@ -159,10 +159,10 @@ int HandleRightClick(WPARAM wParam, PMOUSEHOOKSTRUCT pmouse) {
 
   bool is_on_one_tab = IsOnOneTab(top_container_view, pt);
   bool keep_tab = IsNeedKeep(top_container_view);
-  bool is_on_new_tab_button = IsOnNewTabButton(top_container_view, pt);
+  bool is_on_close_button = IsOnCloseButton(top_container_view, pt);
 
 
-  if (is_on_new_tab_button) {
+  if (is_on_one_tab && is_on_close_button ) {
     ExecuteCommand(IDC_OPTIONS, hwnd);
     return 1;
   }
