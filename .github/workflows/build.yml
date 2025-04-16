@@ -14,10 +14,7 @@ on:
       - "src/version.h"
       - ".github/ISSUE_TEMPLATE/**"
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version (SemVer)'
-        required: true
+
 
 jobs:
   build:
